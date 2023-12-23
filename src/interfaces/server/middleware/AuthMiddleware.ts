@@ -9,23 +9,23 @@ export const parseTokenPayloadMiddleware: express.Handler = asyncMiddleware(asyn
       const [authType, credentials] = (req.headers.authorization as string).split(" ");
 
       switch (authType.toLowerCase()) {
-        case "bearer":
-          // do authenticate with server authorization
+      case "bearer":
+        // do authenticate with server authorization
 
-          break;
-        case "basic":
-          // Base64 encoded string → decode to ascii
-          const decoded = new Buffer(credentials, "base64").toString("ascii");
-          const [username, password] = decoded.split(":");
+        break;
+      case "basic":
+        // Base64 encoded string → decode to ascii
+        const decoded = new Buffer(credentials, "base64").toString("ascii");
+        const [username, password] = decoded.split(":");
 
-          if (username && password) {
-            // check username and password is correct
-          } else {
-            // do something
-          }
-          break;
-        default:
-          break;
+        if (username && password) {
+          // check username and password is correct
+        } else {
+          // do something
+        }
+        break;
+      default:
+        break;
       }
     }
 

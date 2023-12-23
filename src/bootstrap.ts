@@ -17,14 +17,14 @@ export async function bootstrapPlatform(): Promise<void> {
   // const GOOGLE_CLIENT_EMAIL        = process.env.GOOGLE_CLIENT_EMAIL as string;
 
   switch (APP_MODE) {
-    case "local":
-      // do something
-      // "Your app running on Local";
-      break;
-    case "production":
-    default:
-      // do something
-      // "Your app running on Production";
-      break;
+  case "local":
+    // do something
+    // "Your app running on Local";
+    break;
+  case "production":
+  default:
+    // do something
+    // "Your app running on Production";
+    break;
   }
 }

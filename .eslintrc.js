@@ -29,6 +29,9 @@ module.exports = {
     "no-unused-vars": "off",
     "no-var-requires": "off",
     "semi": ["error", "always"],
-    "security/detect-object-injection": "off"
+    "security/detect-object-injection": "off",
+    "indent": ['error', 2, { FunctionDeclaration: { parameters: 'first' } }],
+    "no-trailing-spaces": 'error',
+    "eol-last": ['error', 'always']
   },
 };

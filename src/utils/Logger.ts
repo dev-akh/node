@@ -10,7 +10,6 @@ const fileRotateTransport = new DailyRotateFile({
 });
 
 const customFormat = winston.format.printf(({ level, message }) => {
-  console.log(message);
   const customData = {
     level: level,
     time: timestamp,

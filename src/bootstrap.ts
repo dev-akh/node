@@ -1,4 +1,7 @@
 import { config } from "dotenv";
+import { MongoClient } from "mongodb";
+import { MongoRepository } from "./infra/repository/mongo";
+import { Repository } from "./domain/interface";
 
 config();
 
@@ -9,12 +12,12 @@ export const closePlatform = () => Promise.all(closeCallbacks.map((callback) => 
 export async function bootstrapPlatform(): Promise<void> {
   const APP_MODE = process.env.APP_MODE as string;
 
-  // const GOOGLE_CLIENT_ID           = process.env.GOOGLE_CLIENT_ID as string;
-  // const GOOGLE_CLIENT_SECRET       = process.env.GOOGLE_CLIENT_SECRET as string;
-  // const GOOGLE_CLIENT_REDIRECT_URL = process.env.GOOGLE_CLIENT_REDIRECT_URL as string;
-  // const GOOGLE_PROJECT_ID          = process.env.GOOGLE_PROJECT_ID as string;
-  // const GOOGLE_PRIVATE_KEY         = process.env.GOOGLE_PRIVATE_KEY as string;
-  // const GOOGLE_CLIENT_EMAIL        = process.env.GOOGLE_CLIENT_EMAIL as string;
+  const MONGO_URL                  = process.env.MONGO_URL as string;
+  const MONGO_DBNAME               = process.env.MONGO_DBNAME || 'my_restaurant';
+
+  const client = await MongoClient.connect(MONGO_URL);
+  Repository.instance = new MongoRepository(client, MONGO_DBNAME);
+  closeCallbacks.push(async () => client.close());
 
   switch (APP_MODE) {
   case "local":

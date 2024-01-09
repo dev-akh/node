@@ -49,15 +49,15 @@ export class MongoRepository implements RepositoryInterface {
   public async getAllUsers(): Promise<schema.IStoredUser[]> {
     return await new Promise((resolve, reject) => {
       try {
-        const allUser = this.users.find({});
-        Logger.instance.debug('GetAllUsers',allUser);
+        const allUser = this.users.find({}).toArray();
+        Logger.instance.debug({module: 'GetAllUsers',allUser});
         if(allUser) {
           resolve(this.mapDoc(allUser));
         } else {
-          reject(new NotFoundError("All Users"));
+          reject(new NotFoundError("Get All Users"));
         }
       } catch (error) {
-        Logger.instance.error('Get All Users', error);
+        Logger.instance.error({module:'GetAllUsers', error});
         reject(new RepositoryInternalError(error as Error));
       }
     });
@@ -84,7 +84,11 @@ export class MongoRepository implements RepositoryInterface {
       }
     });
   }
-
+  /*
+  * Store User Information
+  * @params payload: schema.IUserData
+  * @return boolean
+  */
   public async upsertUserData(payload: schema.IUserData): Promise<boolean> {
     try {
       const result = await this.users.updateOne(
@@ -92,17 +96,15 @@ export class MongoRepository implements RepositoryInterface {
         { $set: payload },
         { upsert: true }
       );
-      Logger.instance.debug('upsertUserData result', result);
+      Logger.instance.debug({module: 'upsertUserData result', result});
       if (result.modifiedCount !== undefined) {
-        Logger.instance.debug('upsertUserData', payload);
-        // If modifiedCount is defined, the operation was successful
+        Logger.instance.debug({module: 'upsertUserData', payload});
         return true;
       } else {
-        // If modifiedCount is not defined, the operation was not successful
         return false;
       }
     } catch (error) {
-      Logger.instance.error('upsertUserData', error);
+      Logger.instance.error({module:'upsertUserData', error});
       throw new RepositoryInternalError(error as Error);
     }
   }

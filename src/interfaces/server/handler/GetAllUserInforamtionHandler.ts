@@ -15,7 +15,7 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
     const userUC = new GetUserInformationUsecase();
     const users = await userUC.getAllUsers();
     if (users) {
-      res.status(200).json({ success: true , users });
+      res.status(200).json({ success: true , data: users });
     } else {
       res.sendStatus(404);
     }

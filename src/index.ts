@@ -18,7 +18,7 @@ try {
     app(API_CORS_ORIGIN)
       .listen(RUNNING_PORT, () => Logger.instance.info(`App listening on port ${RUNNING_PORT}!`));
   });
-} catch (e: unknown) {
+} catch (e) {
   if (e instanceof Error) {
     Logger.instance.error(e.message);
   } else {

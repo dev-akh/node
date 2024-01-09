@@ -3,21 +3,21 @@ import { asyncMiddleware } from "../middleware/AsyncMiddleware";
 import * as Logger from "../../../utils/Logger";
 
 /**
- * Getting user information
+ * Store user information
  *
- * @yields {200} return user information
- * @yields {404} Not found user
+ * @yields {200} return success storing
  * @yields {500} Server error
  */
 const handler = async (req: Request, res: Response, next: NextFunction) => {
   try {
     // Getting user information from the database
     if (req) {
-      res.status(200).json({ success: true });
+      const email = req.body.email;
+      res.status(200).json({ success: true, email: email });
     } else {
-      res.sendStatus(404);
+      res.sendStatus(500);
     }
-  } catch (e: unknown) {
+  } catch (e) {
     if (e instanceof Error) {
       Logger.instance.error(e.message);
     } else {

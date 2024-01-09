@@ -41,18 +41,45 @@ export class MongoRepository implements RepositoryInterface {
     }
   }
 
-  public async getUserByEmail(email: string): Promise<schema.IStoredUser> {
+  /*
+  * Get All users
+  * @params null
+  * @return schema.IStoredUser[]
+  */
+  public async getAllUsers(): Promise<schema.IStoredUser[]> {
     return await new Promise((resolve, reject) => {
       try {
-        const doc = this.users.findOne<schema.IStoredUser>({ email: email });
-        Logger.instance.debug('getUserByEmail', doc);
+        const allUser = this.users.find({});
+        Logger.instance.debug('GetAllUsers',allUser);
+        if(allUser) {
+          resolve(this.mapDoc(allUser));
+        } else {
+          reject(new NotFoundError("All Users"));
+        }
+      } catch (error) {
+        Logger.instance.error('Get All Users', error);
+        reject(new RepositoryInternalError(error as Error));
+      }
+    });
+  }
+
+  /*
+  * Get User Information by ID
+  * @params user Id : string
+  * @return schema.IStoredUser
+  */
+  public async getUserById(id: string): Promise<schema.IStoredUser> {
+    return await new Promise((resolve, reject) => {
+      try {
+        const doc = this.users.findOne<schema.IStoredUser>({ _id: this.convertId(id) });
+        Logger.instance.debug('getUserById', doc);
         if (doc) {
           resolve(this.mapDoc(doc));
         } else {
           reject(new NotFoundError('User'));
         }
       } catch (error) {
-        Logger.instance.error('getUserByEmail', error);
+        Logger.instance.error('getUserById', error);
         reject(new RepositoryInternalError(error as Error));
       }
     });

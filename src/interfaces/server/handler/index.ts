@@ -1,1 +1,1 @@
-export * from "./GetUserInforamtionHandler";
+export * from "./GetAllUserInforamtionHandler";

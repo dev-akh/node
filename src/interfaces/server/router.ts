@@ -6,7 +6,7 @@ const expressPinoLogger = require("express-pino-logger");
 import * as Logger from "../../utils";
 import { authMiddleware } from "./middleware/AuthMiddleware";
 
-import { GetUserInformationHandler } from "./handler";
+import { GetAllUserInformationHandler } from "./handler";
 
 export function router(): express.Router {
   return express
@@ -27,6 +27,7 @@ export function router(): express.Router {
       }
       return res.json({ hello: name });
     })
-    .get("/user/:userId", GetUserInformationHandler);
-  //   .post('user',Handlerfunction) // do other route functions
+    .get("/users/all", GetAllUserInformationHandler);
+  // .get("/user/:userId", GetUserInformationHandler)
+  // .post('user',Handlerfunction) // do other route functions
 }

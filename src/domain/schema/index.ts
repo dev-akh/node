@@ -19,6 +19,7 @@ export interface IUserData {
   fatherName: string;
   joinDate: string;
   userRole: number;
+  isBlock: boolean;
   updatedAt: string;
 }
 

@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 import { asyncMiddleware } from "../middleware/AsyncMiddleware";
 import * as Logger from "../../../utils/Logger";
 import { StoreUserInformationUsecase } from "../../../application/usecase/StoreUserInformationUsecase";
@@ -12,7 +12,7 @@ import { AlreadyExistUserError } from "../../../application/controller/errors/Al
  * @yields {409} Already exist user
  * @yields {500} Server error
  */
-const handler = async (req: Request, res: Response, next: NextFunction) => {
+const handler = async (req: Request, res: Response) => {
   try {
     const storeUserUC = new StoreUserInformationUsecase();
     const userInformation: schema.IUserData = {
@@ -31,16 +31,15 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
       isBlock: false
     };
 
-    const isStore = await storeUserUC.storeUserInformation(userInformation);
-    if (isStore) {
-      const email = req.body.email;
-      res.status(201).json({ success: true, email: email });
+    const user = await storeUserUC.storeUserInformation(userInformation);
+    if (user) {
+      res.status(201).json({ success: true, user });
     } else {
       res.status(500).json({ success: false, error: "Failed to store user information." });
     }
     return;
   } catch (e) {
-    if (e instanceof AlreadyExistUserError || e instanceof Error) {
+    if (e instanceof AlreadyExistUserError) {
       Logger.instance.error(e.message);
       res.status(409).json({success: false, error: e.message});
     } else {
@@ -48,8 +47,6 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
       res.sendStatus(500);
     }
     return;
-  } finally {
-    next();
   }
 };
 

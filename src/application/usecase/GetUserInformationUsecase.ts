@@ -8,4 +8,9 @@ export class GetUserInformationUsecase {
     const users = await user.getAllUserInformation();
     return { users };
   }
+
+  async getUserById(id: string): Promise<schema.IStoredUser> {
+    const user = new User();
+    return await user.byId(id);
+  }
 }

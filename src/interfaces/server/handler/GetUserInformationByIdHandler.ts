@@ -4,7 +4,7 @@ import * as Logger from "../../../utils/Logger";
 import { GetUserInformationUsecase } from "../../../application/usecase/GetUserInformationUsecase";
 
 /**
- * Getting user information
+ * Getting user information by userId
  *
  * @yields {200} return user information
  * @yields {404} Not found user
@@ -13,20 +13,23 @@ import { GetUserInformationUsecase } from "../../../application/usecase/GetUserI
 const handler = async (req: Request, res: Response) => {
   try {
     const userUC = new GetUserInformationUsecase();
-    const users = await userUC.getAllUsers();
-    if (users) {
-      res.status(200).json({ success: true , data: users });
+    const userId = req.params['userId'];
+    const user = await userUC.getUserById(userId);
+    if (user) {
+      res.status(200).json({ success: true , data: user });
     } else {
       res.sendStatus(404);
     }
+    return;
   } catch (e) {
     if (e instanceof Error) {
       Logger.instance.error(e.message);
     } else {
       Logger.instance.error("Unknown error occurred.");
     }
-    res.status(500).json(e);
+    res.sendStatus(500);
+    return;
   }
 };
 
-export const GetAllUserInformationHandler = asyncMiddleware(handler);
+export const GetUserInformationByIdHandler = asyncMiddleware(handler);

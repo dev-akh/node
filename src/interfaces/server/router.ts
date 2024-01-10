@@ -8,6 +8,7 @@ import { authMiddleware } from "./middleware/AuthMiddleware";
 
 import {
   GetAllUserInformationHandler,
+  GetUserInformationByIdHandler,
   StoreUserInformationHandler
 } from "./handler";
 
@@ -31,5 +32,6 @@ export function router(): express.Router {
       return res.json({ hello: name });
     })
     .get("/user/all", GetAllUserInformationHandler)
+    .get("/user/:userId",GetUserInformationByIdHandler)
     .post("/user",StoreUserInformationHandler);
 }

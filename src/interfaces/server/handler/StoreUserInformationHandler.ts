@@ -3,11 +3,13 @@ import { asyncMiddleware } from "../middleware/AsyncMiddleware";
 import * as Logger from "../../../utils/Logger";
 import { StoreUserInformationUsecase } from "../../../application/usecase/StoreUserInformationUsecase";
 import * as schema from "../../../domain/schema";
+import { AlreadyExistUserError } from "../../../application/controller/errors/AlreadyExistUserError";
 
 /**
  * Store user information
  *
  * @yields {201} return success storing
+ * @yields {409} Already exist user
  * @yields {500} Server error
  */
 const handler = async (req: Request, res: Response, next: NextFunction) => {
@@ -34,15 +36,18 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
       const email = req.body.email;
       res.status(201).json({ success: true, email: email });
     } else {
-      res.sendStatus(500);
+      res.status(500).json({ success: false, error: "Failed to store user information." });
     }
+    return;
   } catch (e) {
-    if (e instanceof Error) {
+    if (e instanceof AlreadyExistUserError || e instanceof Error) {
       Logger.instance.error(e.message);
+      res.status(409).json({success: false, error: e.message});
     } else {
       Logger.instance.error("Unknown error occurred.");
+      res.sendStatus(500);
     }
-    res.sendStatus(500);
+    return;
   } finally {
     next();
   }

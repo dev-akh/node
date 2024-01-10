@@ -19,6 +19,7 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
     } else {
       res.sendStatus(404);
     }
+    return;
   } catch (e) {
     if (e instanceof Error) {
       Logger.instance.error(e.message);
@@ -26,6 +27,7 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
       Logger.instance.error("Unknown error occurred.");
     }
     res.sendStatus(500);
+    return;
   } finally {
     next();
   }
